@@ -49,13 +49,15 @@ module Difficulty =
         let physical_data = Strain.calculate_finger_strains (rate, notes) note_data
         let hands = Strain.calculate_hand_strains (rate, notes) note_data
         let physical = weighted_overall_difficulty (physical_data |> Seq.map _.StrainV1Notes |> Seq.concat |> Seq.filter (fun x -> x > 0.0f))
+        let xxy_sr = XXY_SR.calculate_xxysr (rate, notes)
 
         {
             NoteDifficulty = note_data
             Strains = physical_data
             Variety = variety
             Hands = hands
-            Overall = if Single.IsFinite physical then physical else 0.0f
+            //Overall = if Single.IsFinite physical then physical else 0.0f
+            Overall = xxy_sr
         }
 
     let calculate = calculate_uncached |> cached
